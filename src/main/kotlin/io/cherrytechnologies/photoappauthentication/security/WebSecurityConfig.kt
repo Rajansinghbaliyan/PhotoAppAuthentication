@@ -1,9 +1,10 @@
 package io.cherrytechnologies.photoappauthentication.security
 
 import io.cherrytechnologies.photoappauthentication.utils.globalLogInfo
-import io.cherrytechnologies.photoappauthentication.web.services.LoginService
+import io.cherrytechnologies.photoappauthentication.web.services.UserService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.env.Environment
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -13,8 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig(
-    val loginService: LoginService,
-    val passwordEncoder: BCryptPasswordEncoder
+    val userService: UserService,
+    val passwordEncoder: BCryptPasswordEncoder,
+    val environment: Environment
 ) : WebSecurityConfigurerAdapter() {
 
     @Value("\${gateway.ip}")
@@ -35,11 +37,11 @@ class WebSecurityConfig(
 
     override fun configure(auth: AuthenticationManagerBuilder?) {
         auth
-            ?.userDetailsService(loginService)
+            ?.userDetailsService(userService)
             ?.passwordEncoder(passwordEncoder)
     }
 
-    fun getAuthenticationFilter() = with(AuthenticationFilter()) {
+    fun getAuthenticationFilter() = with(AuthenticationFilter(userService,environment)) {
         this.setAuthenticationManager(authenticationManager())
         this
     }

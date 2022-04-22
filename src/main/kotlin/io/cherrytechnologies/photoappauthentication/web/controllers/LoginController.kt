@@ -22,6 +22,5 @@ class LoginController(val loginService: LoginService) {
         @RequestBody authenticateModel: AuthenticateModel
     ) = loginService
         .authenticateByEmail(authenticateModel.email,authenticateModel.password)
-        .toUserDto()
         .logInfo(log,"/POST authenticate email: ${authenticateModel.email}")
 }

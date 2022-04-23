@@ -16,7 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 class WebSecurityConfig(
     val userService: UserService,
     val passwordEncoder: BCryptPasswordEncoder,
-    val environment: Environment
+    val env: Environment
 ) : WebSecurityConfigurerAdapter() {
 
     @Value("\${gateway.ip}")
@@ -41,7 +41,9 @@ class WebSecurityConfig(
             ?.passwordEncoder(passwordEncoder)
     }
 
-    fun getAuthenticationFilter() = with(AuthenticationFilter(userService,environment)) {
+    fun getAuthenticationFilter() = with(AuthenticationFilter(userService,env)) {
+        // to add the custom url for the authentication
+        this.setFilterProcessesUrl(env.getProperty("login.url.path"))
         this.setAuthenticationManager(authenticationManager())
         this
     }

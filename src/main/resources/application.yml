@@ -44,4 +44,4 @@ token:
 
 login:
   url:
-    path: /v1/api/users/login
+    path: /auth/login

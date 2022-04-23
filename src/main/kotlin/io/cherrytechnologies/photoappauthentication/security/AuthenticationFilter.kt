@@ -47,6 +47,7 @@ class AuthenticationFilter(
         val user = authResult?.principal as User
         val userDb = userService.findByEmail(user.username)
         val token = Jwts.builder()
+            .setId(userDb.id.toString())
             .setSubject(userDb.email)
             .setExpiration(
                 Date(

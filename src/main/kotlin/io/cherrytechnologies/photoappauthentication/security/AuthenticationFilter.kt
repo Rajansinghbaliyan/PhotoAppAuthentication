@@ -52,10 +52,10 @@ class AuthenticationFilter(
             .setExpiration(
                 Date(
                     System.currentTimeMillis() +
-                            env.getProperty("token.expiration")?.toLong()!!
+                            env.getProperty("jwt.expiration")?.toLong()!!
                 )
             )
-            .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret"))
+            .signWith(SignatureAlgorithm.HS512, env.getProperty("jwt.secret"))
             .compact()
 
         response?.setHeader("token", token)
